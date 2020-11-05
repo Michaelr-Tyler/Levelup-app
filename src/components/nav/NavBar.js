@@ -36,4 +36,3 @@ export const NavBar = (props) => {
     )
 }
 
-//comment to commit main
