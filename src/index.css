@@ -194,3 +194,10 @@ code {
 .icon-send:before {
 	content: "🔓";
 }
+
+.game {
+	border: 2px solid black;
+	border-radius: 5px;
+	margin: 5px;
+	padding:5px;
+}
