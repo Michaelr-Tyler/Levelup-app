@@ -16,11 +16,11 @@ export const EventProvider = (props) => {
     }
 
     const createEvent = (event) => {
-        return fetch("", {
+        return fetch("http://localhost:8000/events", {
             method:'POST',
             headers: {
                 "Content-type": "application/Json",
-                "Autherization" : `Token ${localStorage.getItem('lu_token')}`
+                "Authorization" : `Token ${localStorage.getItem('lu_token')}`
             },
             body: JSON.stringify(event)
 
