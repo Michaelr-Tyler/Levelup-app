@@ -97,7 +97,7 @@ export const GameForm = props => {
                         numberOfPlayers: parseInt(currentGame.numberOfPlayers),
                         skillLevel: parseInt(currentGame.skillLevel),
                         gameTypeId: parseInt(currentGame.gameTypeId),
-                        gamer: localStorage.getItem("rare_user_id")
+                        gamer: localStorage.getItem("user_id")
                     }
 
                     // Send POST request to your API
