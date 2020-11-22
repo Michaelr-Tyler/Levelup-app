@@ -3,7 +3,7 @@ import { GameContext } from "./GameProvider.js"
 
 
 export const GameForm = props => {
-    const { createGame, getGameTypes, gameTypes } = useContext(GameContext)
+    const { createGame, getGameTypes, gameTypes, getGame, updateGame} = useContext(GameContext)
 
     /*
         Since the input fields are bound to the values of
@@ -24,7 +24,19 @@ export const GameForm = props => {
     useEffect(() => {
         getGameTypes()
     }, [])
+    useEffect(() => {
 
+        if("gameId" in props.match.params) {
+            getGame(props.match.params.gameId).then((game) => {
+                setCurrentGame({
+                    skillLevel: game.skill_level,
+                    numberOfPlayers: game.number_of_players,
+                    title: game.title,
+                    gameTypeId: game.gametype_id
+                })
+            })
+        }
+    }, [props.match.params.gameId])
     /*
         Update the `currentGame` state variable every time
         the state of one of the input fields changes.
@@ -85,25 +97,44 @@ export const GameForm = props => {
                 </div>
             </fieldset>
 
-            {/* You create the rest of the input fields for each game property */}
+            {
+                ("gameId" in props.match.params)
+                    ? <button type="submit"
+                    onClick={evt => {
+                        // Prevent form from being submitted
+                        evt.preventDefault()
 
-            <button type="submit"
-                onClick={evt => {
-                    // Prevent form from being submitted
-                    evt.preventDefault()
+                        const game = {
+                            id: parseInt(props.match.params.gameId),
+                            title: currentGame.title,
+                            numberOfPlayers: parseInt(currentGame.numberOfPlayers),
+                            skillLevel: parseInt(currentGame.skillLevel),
+                            gameTypeId: parseInt(currentGame.gameTypeId),
+                            gamer: localStorage.getItem("user_id")
+                        }
 
-                    const game = {
-                        title: currentGame.title,
-                        numberOfPlayers: parseInt(currentGame.numberOfPlayers),
-                        skillLevel: parseInt(currentGame.skillLevel),
-                        gameTypeId: parseInt(currentGame.gameTypeId),
-                        gamer: localStorage.getItem("user_id")
-                    }
+                        // Send POST request to your API
+                        updateGame(game).then(props.history.push("/"))
+                    }}
+                    className="btn-2 btn-primary">Edit</button>
+                    : <button type="submit"
+                    onClick={evt => {
+                        // Prevent form from being submitted
+                        evt.preventDefault()
 
-                    // Send POST request to your API
-                    createGame(game)
-                }}
-                className="btn-2 btn-primary">Create</button>
+                        const game = {
+                            title: currentGame.title,
+                            numberOfPlayers: parseInt(currentGame.numberOfPlayers),
+                            skillLevel: parseInt(currentGame.skillLevel),
+                            gameTypeId: parseInt(currentGame.gameTypeId),
+                            gamer: localStorage.getItem("user_id")
+                        }
+
+                        // Send POST request to your API
+                        createGame(game)
+                    }}
+                    className="btn-2 btn-primary">Create</button>
+            }
         </form>
     )
 }
